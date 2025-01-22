@@ -1,13 +1,18 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"code.gitea.io/sdk/gitea"
+	"github.com/go-git/go-git/v5"
+	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/gofiber/fiber/v2"
 )
 
+const GitServer = "http://server.gitea.orb.local/"
 
 type WebhookPayload struct {
 	Ref        string      `json:"ref"`
@@ -39,6 +44,53 @@ func PostGiteaHook(c *fiber.Ctx) error {
 		})
 	}
 	log.Printf("Received hook: %+v", payload)
+
+	// Clone the given repository to the given directory
+	log.Printf("git clone %s", GitServer+payload.Repository.FullName)
+	r, err := git.PlainClone("/tmp/" + payload.Repository.FullName, false, &git.CloneOptions{
+		URL:      GitServer + payload.Repository.FullName,
+		Progress: os.Stdout,
+	})
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to clone repository",
+		})
+	}
+	log.Printf("git show-ref --head HEAD")
+	ref, err := r.Head()
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to get HEAD",
+		})
+	}
+	fmt.Println(ref.Hash())
+
+	w, err := r.Worktree()
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to get worktree",
+		})
+	}
+	err = w.Checkout(&git.CheckoutOptions{
+		Hash: plumbing.NewHash(payload.After),
+	})
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to checkout",
+		})
+	}
+	ref, err = r.Head()
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to get HEAD",
+		})
+	}
+	fmt.Println(ref.Hash())
 
 	return c.JSON(ResponseHTTP{
 		Success: true,
