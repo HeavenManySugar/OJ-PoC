@@ -3,19 +3,22 @@ package main
 import (
 	"log"
 
-	"github.com/gofiber/fiber/v3"
+	"github.com/HeavenManySugar/OJ-PoC/database"
+	"github.com/HeavenManySugar/OJ-PoC/models"
+	"github.com/HeavenManySugar/OJ-PoC/routes"
 )
 
+// @title			OJ-PoC API
+// @version		1.0
+// @description	This is a simple OJ-PoC API server.
+// @BasePath		/
 func main() {
-    // Initialize a new Fiber app
-    app := fiber.New()
+	if err := database.Connect(); err != nil {
+		log.Panic("Can't connect database:", err.Error())
+	}
 
-    // Define a route for the GET method on the root path '/'
-    app.Get("/", func(c fiber.Ctx) error {
-        // Send a string response to the client
-        return c.SendString("Hello, World 👋!")
-    })
+	database.DBConn.AutoMigrate(&models.Book{})
 
-    // Start the server on port 3001
-    log.Fatal(app.Listen(":3001"))
+	app := routes.New()
+	log.Fatal(app.Listen(":3001"))
 }
