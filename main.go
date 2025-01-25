@@ -6,6 +6,7 @@ import (
 	"github.com/HeavenManySugar/OJ-PoC/database"
 	"github.com/HeavenManySugar/OJ-PoC/models"
 	"github.com/HeavenManySugar/OJ-PoC/routes"
+	"github.com/HeavenManySugar/OJ-PoC/sandbox"
 )
 
 // @title			OJ-PoC API
@@ -16,6 +17,8 @@ func main() {
 	if err := database.Connect(); err != nil {
 		log.Panic("Can't connect database:", err.Error())
 	}
+	s := sandbox.NewSandbox(10)
+	s.RunShellCommand([]byte("echo 'Hello, World!'"))
 
 	database.DBConn.AutoMigrate(&models.Book{})
 

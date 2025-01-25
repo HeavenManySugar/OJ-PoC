@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const CodeStorageFolder = "/tmp/code"
+const CodeStorageFolder = "/sandbox/code"
 
 func WriteToTempFile(b []byte) (string, error) {
 	// using nano second to avoid filename collision in highly concurrent requests

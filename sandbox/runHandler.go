@@ -32,6 +32,8 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte) string {
 		fmt.Sprintf("--box-id=%v", boxID), 
 		// max size (in KB) of files that can be created per execution = 5MB
 		"--fsize=5120",
+		// makes directory visible in the sandbox
+		fmt.Sprintf("--dir=%v", CodeStorageFolder),
 		// if sandbox is busy, wait instead of returning error right away
 		// instead of serving 25/100 requests in 10 sandbox, it's gonna serve all
 		"--wait",
@@ -52,7 +54,10 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte) string {
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Printf("Failed to run command: %v", err)
 		return fmt.Sprintf("Failed to run command: %v", err)
 	}
+
+	log.Printf("Command output: %s", string(out))
 	return string(out)
 }
