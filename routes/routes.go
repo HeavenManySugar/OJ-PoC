@@ -29,6 +29,7 @@ func New() *fiber.App {
 	api.Post("/books", handlers.RegisterBook)
 	api.Delete("/books/:id", handlers.DeleteBook)
 	api.Post("/gitea", handlers.PostGiteaHook)
+	api.Post("/sandbox", handlers.PostSandboxCmd)
 
 	return app
 }

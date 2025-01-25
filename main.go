@@ -37,6 +37,7 @@ func main() {
 	s.RunShellCommand([]byte("echo $CODE_PATH"), []byte("/workspaces/ubuntu/OJ-PoC"))
 
 	database.DBConn.AutoMigrate(&models.Book{})
+	database.DBConn.AutoMigrate(&models.Sandbox{})
 
 	app := routes.New()
 	log.Fatal(app.Listen(":3001"))

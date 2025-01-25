@@ -368,6 +368,26 @@ definitions:
       updatedAt:
         type: string
     type: object
+  models.Sandbox:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      script:
+        example: |-
+          #!/bin/bash
+
+          echo 'Hello, World!'
+        type: string
+      source_git_url:
+        example: user_name/repo_name
+        type: string
+      updatedAt:
+        type: string
+    type: object
 info:
   contact: {}
   description: This is a simple OJ-PoC API server.
@@ -525,4 +545,35 @@ paths:
       summary: Receive Gitea hook
       tags:
       - Gitea
+  /api/sandbox:
+    post:
+      consumes:
+      - application/json
+      description: Specify the shell command for the corresponding repo
+      parameters:
+      - description: Shell command
+        in: body
+        name: cmd
+        required: true
+        schema:
+          $ref: '#/definitions/models.Sandbox'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.Sandbox'
+              type: object
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Specify the shell command for the corresponding repo
+      tags:
+      - sandbox
 swagger: "2.0"

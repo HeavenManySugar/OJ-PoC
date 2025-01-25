@@ -261,6 +261,58 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/sandbox": {
+            "post": {
+                "description": "Specify the shell command for the corresponding repo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sandbox"
+                ],
+                "summary": "Specify the shell command for the corresponding repo",
+                "parameters": [
+                    {
+                        "description": "Shell command",
+                        "name": "cmd",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Sandbox"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handlers.ResponseHTTP"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/models.Sandbox"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ResponseHTTP"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -798,6 +850,31 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "Book A"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Sandbox": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "script": {
+                    "type": "string",
+                    "example": "#!/bin/bash\n\necho 'Hello, World!'"
+                },
+                "source_git_url": {
+                    "type": "string",
+                    "example": "user_name/repo_name"
                 },
                 "updatedAt": {
                     "type": "string"
