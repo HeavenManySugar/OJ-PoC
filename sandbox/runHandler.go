@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 	"time"
+
+	"github.com/HeavenManySugar/OJ-PoC/database"
+	"github.com/HeavenManySugar/OJ-PoC/models"
 )
 
 const execTimeoutDuration = time.Second * 60
@@ -24,7 +26,7 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 		log.Println("error saving code as file:", err)
 		return "Failed to save code as file"
 	}
-	defer os.Remove(shellFilename(codeID))
+	// defer os.Remove(shellFilename(codeID))
 
 	// running the code
 	cmdArgs := []string{
@@ -55,4 +57,16 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 
 	log.Printf("Command output: %s", string(out))
 	return string(out)
+}
+
+func (s *Sandbox) RunShellCommandByRepo(parentsRepo string, repo string) string {
+	db := database.DBConn
+
+	var cmd models.Sandbox
+	if err := db.Where("source_git_repo = ?", parentsRepo).First(&cmd).Error; err != nil {
+		return fmt.Sprintf("Failed to find shell command for %v", parentsRepo)
+	}
+
+	// return s.RunShellCommand([]byte(cmd.Script), []byte(fmt.Sprintf("/sandbox/%v", repo)))
+	return s.RunShellCommand([]byte(cmd.Script), nil)
 }

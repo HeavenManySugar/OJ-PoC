@@ -34,7 +34,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	s.RunShellCommand([]byte("echo $CODE_PATH"), []byte("/workspaces/ubuntu/OJ-PoC"))
+	s.RunShellCommandByRepo("user_name/repo_name", "user_name/repo_name")
 
 	database.DBConn.AutoMigrate(&models.Book{})
 	database.DBConn.AutoMigrate(&models.Sandbox{})
