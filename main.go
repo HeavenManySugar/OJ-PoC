@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/HeavenManySugar/OJ-PoC/database"
 	"github.com/HeavenManySugar/OJ-PoC/models"
@@ -18,6 +22,18 @@ func main() {
 		log.Panic("Can't connect database:", err.Error())
 	}
 	s := sandbox.NewSandbox(10)
+	defer s.Cleanup()
+
+	// 設置信號處理
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-c
+		fmt.Println("Received interrupt signal, cleaning up...")
+		s.Cleanup()
+		os.Exit(0)
+	}()
+
 	s.RunShellCommand([]byte("echo 'Hello, World!'"))
 
 	database.DBConn.AutoMigrate(&models.Book{})

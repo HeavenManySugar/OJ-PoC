@@ -44,3 +44,14 @@ func (s *Sandbox) Release(boxID int) {
 func (s *Sandbox) AvailableCount() int {
 	return len(s.AvailableBoxIDs)
 }
+
+func (s *Sandbox) Cleanup() {
+	for _, boxID := range s.AvailableBoxIDs {
+		cmd := exec.Command("isolate", "--cleanup", fmt.Sprintf("-b %v", boxID))
+		fmt.Printf("Cleaning up box %v\n", boxID)
+		err := cmd.Run()
+		if err != nil {
+			fmt.Printf("Error cleaning up box %v: %v\n", boxID, err)
+		}
+	}
+}
