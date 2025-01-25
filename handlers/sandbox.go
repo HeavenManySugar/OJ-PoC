@@ -30,7 +30,15 @@ func PostSandboxCmd(c *fiber.Ctx) error {
 		})
 	}
 
-	db.Create(cmd)
+	var existingCmd models.Sandbox
+	if err := db.Where("source_git_repo = ?", cmd.SourceGitRepo).First(&existingCmd).Error; err != nil {
+		// If the script does not exist, create a new one
+		db.Create(cmd)
+	} else {
+		// If the script exists, update it
+		existingCmd.Script = cmd.Script
+		db.Save(&existingCmd)
+	}
 
 	return c.JSON(ResponseHTTP{
 		Success: true,
