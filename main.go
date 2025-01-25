@@ -34,7 +34,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	s.RunShellCommand([]byte("echo 'Hello, World!'"))
+	s.RunShellCommand([]byte("echo $CODE_PATH"), []byte("/workspaces/ubuntu/OJ-PoC"))
 
 	database.DBConn.AutoMigrate(&models.Book{})
 
