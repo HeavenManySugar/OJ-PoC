@@ -34,7 +34,7 @@ func main() {
 		os.Exit(0)
 	}()
 
-	s.RunShellCommandByRepo("user_name/repo_name", "user_name/repo_name")
+	s.RunShellCommandByRepo("user_name/repo_name", nil)
 
 	database.DBConn.AutoMigrate(&models.Book{})
 	database.DBConn.AutoMigrate(&models.Sandbox{})
