@@ -21,8 +21,8 @@ func main() {
 	if err := database.Connect(); err != nil {
 		log.Panic("Can't connect database:", err.Error())
 	}
-	s := sandbox.NewSandbox(10)
-	defer s.Cleanup()
+	sandbox.SandboxPtr = sandbox.NewSandbox(10)
+	defer sandbox.SandboxPtr.Cleanup()
 
 	// 設置信號處理
 	c := make(chan os.Signal, 1)
@@ -30,11 +30,11 @@ func main() {
 	go func() {
 		<-c
 		fmt.Println("Received interrupt signal, cleaning up...")
-		s.Cleanup()
+		sandbox.SandboxPtr.Cleanup()
 		os.Exit(0)
 	}()
 
-	s.RunShellCommandByRepo("user_name/repo_name", nil)
+	sandbox.SandboxPtr.RunShellCommandByRepo("user_name/repo_name", nil)
 
 	database.DBConn.AutoMigrate(&models.Book{})
 	database.DBConn.AutoMigrate(&models.Sandbox{})

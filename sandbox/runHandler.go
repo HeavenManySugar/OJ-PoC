@@ -13,6 +13,9 @@ import (
 
 const execTimeoutDuration = time.Second * 60
 
+// SandboxPtr is a pointer to Sandbox
+var SandboxPtr *Sandbox
+
 func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 	ctx, cancel := context.WithTimeout(context.Background(), execTimeoutDuration)
 	defer cancel()

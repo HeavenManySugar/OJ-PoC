@@ -10,6 +10,8 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/HeavenManySugar/OJ-PoC/sandbox"
 )
 
 const GitServer = "http://server.gitea.orb.local/"
@@ -91,6 +93,8 @@ func PostGiteaHook(c *fiber.Ctx) error {
 		})
 	}
 	fmt.Println(ref.Hash())
+	
+	sandbox.SandboxPtr.RunShellCommandByRepo(payload.Repository.Parent.FullName, nil)
 
 	return c.JSON(ResponseHTTP{
 		Success: true,
