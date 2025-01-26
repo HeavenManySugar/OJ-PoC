@@ -387,6 +387,9 @@ definitions:
         type: string
       updatedAt:
         type: string
+    required:
+    - script
+    - source_git_url
     type: object
 info:
   contact: {}

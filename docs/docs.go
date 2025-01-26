@@ -858,6 +858,10 @@ const docTemplate = `{
         },
         "models.Sandbox": {
             "type": "object",
+            "required": [
+                "script",
+                "source_git_url"
+            ],
             "properties": {
                 "createdAt": {
                     "type": "string"
