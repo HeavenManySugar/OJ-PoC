@@ -65,7 +65,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 		})
 	}
 	os.Chmod(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName), 0777)
-	defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
+	// defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
 	log.Printf("git show-ref --head HEAD")
 	ref, err := r.Head()
 	if err != nil {
@@ -114,7 +114,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 	log.Printf("Score: %s", score)
 	// save score to database
 	db := database.DBConn
-	scoreInt, err := strconv.Atoi(strings.TrimSpace(string(score)))
+	scoreFloat, err := strconv.ParseFloat(strings.TrimSpace(string(score)), 64)
 	if err != nil {
 		log.Printf("Failed to convert score to int: %v", err)
 		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
@@ -125,7 +125,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 	// Create a new score entry in the database
 	newScore := models.Score{
 		GitRepo: payload.Repository.FullName,
-		Score:   scoreInt,
+		Score:   scoreFloat,
 	}
 	if err := db.Create(&newScore).Error; err != nil {
 		log.Printf("Failed to create new score entry: %v", err)

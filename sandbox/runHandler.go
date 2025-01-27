@@ -50,7 +50,17 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 			fmt.Sprintf("--chdir=%v", string(codePath)), 
 			fmt.Sprintf("--dir=%v:rw", string(codePath)), 
 			fmt.Sprintf("--env=CODE_PATH=%v", string(codePath)))
+
+		// copy python code(./sandbox/python/grp_parser.py) to code path
+		os.Mkdir(fmt.Sprintf("%v/%s", string(codePath), "utils"), 0755)
+		copy := exec.CommandContext(ctx, "cp", "./sandbox/python/grp_parser.py", fmt.Sprintf("%v/%s", string(codePath), "utils"))
+		if err := copy.Run(); err != nil {
+			log.Printf("Failed to copy python code: %v", err)
+			return fmt.Sprintf("Failed to copy python code: %v", err)
+		}
 	}
+	
+	
 
 	cmdArgs = append(cmdArgs, "--run", "--", "/usr/bin/sh", shellFilename(codeID))
 	

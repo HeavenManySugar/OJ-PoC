@@ -404,7 +404,7 @@ definitions:
         type: integer
       score:
         example: 100
-        type: integer
+        type: number
       updatedAt:
         type: string
     required:

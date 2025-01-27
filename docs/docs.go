@@ -1006,7 +1006,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "score": {
-                    "type": "integer",
+                    "type": "number",
                     "example": 100
                 },
                 "updatedAt": {
