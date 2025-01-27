@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"time"
 
@@ -29,7 +30,7 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 		log.Println("error saving code as file:", err)
 		return "Failed to save code as file"
 	}
-	// defer os.Remove(shellFilename(codeID))
+	defer os.Remove(shellFilename(codeID))
 
 	// running the code
 	cmdArgs := []string{
@@ -48,7 +49,7 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 	}
 
 	cmdArgs = append(cmdArgs, "--run", "--", "/usr/bin/sh", shellFilename(codeID))
-
+	
 
 	cmd := exec.CommandContext(ctx, "isolate", cmdArgs...)
 
