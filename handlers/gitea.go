@@ -5,12 +5,16 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	"code.gitea.io/sdk/gitea"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 	"github.com/gofiber/fiber/v2"
 
+	"github.com/HeavenManySugar/OJ-PoC/database"
+	"github.com/HeavenManySugar/OJ-PoC/models"
 	"github.com/HeavenManySugar/OJ-PoC/sandbox"
 )
 
@@ -99,7 +103,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 	
 	sandbox.SandboxPtr.RunShellCommandByRepo(payload.Repository.Parent.FullName, []byte(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName)))
 
-	// read score from file and save to database
+	// read score from file
 	score, err := os.ReadFile(fmt.Sprintf("%s/%s/score.txt", RepoFolder, payload.Repository.FullName))
 	if err != nil {
 		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
@@ -108,11 +112,28 @@ func PostGiteaHook(c *fiber.Ctx) error {
 		})
 	}
 	log.Printf("Score: %s", score)
-
-	
-
-
-
+	// save score to database
+	db := database.DBConn
+	scoreInt, err := strconv.Atoi(strings.TrimSpace(string(score)))
+	if err != nil {
+		log.Printf("Failed to convert score to int: %v", err)
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to convert score to int",
+		})
+	}
+	// Create a new score entry in the database
+	newScore := models.Score{
+		GitRepo: payload.Repository.FullName,
+		Score:   scoreInt,
+	}
+	if err := db.Create(&newScore).Error; err != nil {
+		log.Printf("Failed to create new score entry: %v", err)
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to create new score entry",
+		})
+	}
 	return c.JSON(ResponseHTTP{
 		Success: true,
 		Message: "Successfully received hook",

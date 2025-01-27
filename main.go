@@ -38,6 +38,7 @@ func main() {
 
 	database.DBConn.AutoMigrate(&models.Book{})
 	database.DBConn.AutoMigrate(&models.Sandbox{})
+	database.DBConn.AutoMigrate(&models.Score{})
 
 	app := routes.New()
 	log.Fatal(app.Listen(":3001"))
