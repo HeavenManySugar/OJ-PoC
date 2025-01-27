@@ -43,6 +43,6 @@ func PostSandboxCmd(c *fiber.Ctx) error {
 	return c.JSON(ResponseHTTP{
 		Success: true,
 		Message: fmt.Sprintf("Success set shell command for %v.", cmd.SourceGitRepo),
-		Data:    *cmd,
+		Data:	 existingCmd,
 	})
 }
