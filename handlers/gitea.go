@@ -65,7 +65,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 		})
 	}
 	os.Chmod(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName), 0777)
-	// defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
+	defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
 	log.Printf("git show-ref --head HEAD")
 	ref, err := r.Head()
 	if err != nil {
