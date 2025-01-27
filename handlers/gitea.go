@@ -50,7 +50,6 @@ func PostGiteaHook(c *fiber.Ctx) error {
 
 	// Clone the given repository to the given directory
 	log.Printf("git clone %s", GitServer+payload.Repository.FullName)
-	defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
 	r, err := git.PlainClone(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName), false, &git.CloneOptions{
 		URL:      GitServer + payload.Repository.FullName,
 		Progress: os.Stdout,
@@ -61,6 +60,8 @@ func PostGiteaHook(c *fiber.Ctx) error {
 			Message: "Failed to clone repository",
 		})
 	}
+	os.Chmod(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName), 0777)
+	defer os.RemoveAll(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName))
 	log.Printf("git show-ref --head HEAD")
 	ref, err := r.Head()
 	if err != nil {
@@ -97,6 +98,19 @@ func PostGiteaHook(c *fiber.Ctx) error {
 	fmt.Println(ref.Hash())
 	
 	sandbox.SandboxPtr.RunShellCommandByRepo(payload.Repository.Parent.FullName, []byte(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName)))
+
+	// read score from file and save to database
+	score, err := os.ReadFile(fmt.Sprintf("%s/%s/score.txt", RepoFolder, payload.Repository.FullName))
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to read score",
+		})
+	}
+	log.Printf("Score: %s", score)
+
+	
+
 
 
 	return c.JSON(ResponseHTTP{

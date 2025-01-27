@@ -45,7 +45,10 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 	}
 
 	if len(codePath) > 0 {
-		cmdArgs = append(cmdArgs, fmt.Sprintf("--dir=%v", string(codePath)), fmt.Sprintf("--env=CODE_PATH=%v", string(codePath)))
+		cmdArgs = append(cmdArgs, 
+			fmt.Sprintf("--chdir=%v", string(codePath)), 
+			fmt.Sprintf("--dir=%v:rw", string(codePath)), 
+			fmt.Sprintf("--env=CODE_PATH=%v", string(codePath)))
 	}
 
 	cmdArgs = append(cmdArgs, "--run", "--", "/usr/bin/sh", shellFilename(codeID))
