@@ -15,6 +15,7 @@ import (
 )
 
 const GitServer = "http://server.gitea.orb.local/"
+const RepoFolder = "/sandbox/repo"
 
 type WebhookPayload struct {
 	Ref        string      `json:"ref"`
@@ -49,7 +50,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 
 	// Clone the given repository to the given directory
 	log.Printf("git clone %s", GitServer+payload.Repository.FullName)
-	r, err := git.PlainClone("/tmp/" + payload.Repository.FullName, false, &git.CloneOptions{
+	r, err := git.PlainClone(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName), false, &git.CloneOptions{
 		URL:      GitServer + payload.Repository.FullName,
 		Progress: os.Stdout,
 	})
@@ -94,7 +95,7 @@ func PostGiteaHook(c *fiber.Ctx) error {
 	}
 	fmt.Println(ref.Hash())
 	
-	sandbox.SandboxPtr.RunShellCommandByRepo(payload.Repository.Parent.FullName, nil)
+	sandbox.SandboxPtr.RunShellCommandByRepo(payload.Repository.Parent.FullName, []byte(fmt.Sprintf("%s/%s", RepoFolder, payload.Repository.FullName)))
 
 	return c.JSON(ResponseHTTP{
 		Success: true,
