@@ -25,7 +25,8 @@ func (s *Sandbox) RunShellCommand(shellCommand []byte, codePath []byte) string {
 	defer s.Release(boxID)
 
 	// saving code as file
-	codeID, err := WriteToTempFile([]byte(shellCommand))
+	shellCommand = append(shellCommand, []byte("\nrm build -rf")...)
+	codeID, err := WriteToTempFile(shellCommand)
 	if err != nil {
 		log.Println("error saving code as file:", err)
 		return "Failed to save code as file"
