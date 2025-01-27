@@ -391,6 +391,26 @@ definitions:
     - script
     - source_git_url
     type: object
+  models.Score:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      git_repo:
+        example: user_name/repo_name
+        type: string
+      id:
+        type: integer
+      score:
+        example: 100
+        type: integer
+      updatedAt:
+        type: string
+    required:
+    - git_repo
+    - score
+    type: object
 info:
   contact: {}
   description: This is a simple OJ-PoC API server.
@@ -579,4 +599,64 @@ paths:
       summary: Specify the shell command for the corresponding repo
       tags:
       - sandbox
+  /api/score/{repo}:
+    get:
+      consumes:
+      - application/json
+      description: Get a score by repo
+      parameters:
+      - description: Repo name
+        in: path
+        name: repo
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                type:
+                  $ref: '#/definitions/models.Score'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get a score by repo
+      tags:
+      - Score
+  /api/scores:
+    get:
+      consumes:
+      - application/json
+      description: Get all scores
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.ResponseHTTP'
+            - properties:
+                type:
+                  items:
+                    $ref: '#/definitions/models.Score'
+                  type: array
+              type: object
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/handlers.ResponseHTTP'
+      summary: Get all scores
+      tags:
+      - Score
 swagger: "2.0"
