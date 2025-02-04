@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/HeavenManySugar/OJ-PoC/database"
 	"github.com/HeavenManySugar/OJ-PoC/models"
-	"github.com/gofiber/fiber/v2"
 )
 
 // GetScores is a function to get all scores
