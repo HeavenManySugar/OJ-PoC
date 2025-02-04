@@ -117,6 +117,10 @@ def __main():
     with open("score.txt", "w") as f:
         f.write(f"{parser.get_score():.1f}")
     print("Score has been saved to score.txt")
+    # save output to message.txt
+    with open("message.txt", "w") as f:
+        f.write(parser.parser())
+    print("Output has been saved to message.txt")
 
 
 if __name__ == "__main__":
