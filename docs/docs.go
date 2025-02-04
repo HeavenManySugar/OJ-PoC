@@ -220,7 +220,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Gitea"
+                    "WebHook"
                 ],
                 "summary": "Receive Gitea hook",
                 "parameters": [
@@ -272,7 +272,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "sandbox"
+                    "Sandbox"
                 ],
                 "summary": "Specify the shell command for the corresponding repo",
                 "parameters": [

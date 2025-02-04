@@ -12,7 +12,7 @@ import (
 // Specify the shell command for the corresponding repo
 // @Summary		Specify the shell command for the corresponding repo
 // @Description	Specify the shell command for the corresponding repo
-// @Tags			sandbox
+// @Tags			Sandbox
 // @Accept			json
 // @Produce		json
 // @Param			cmd	body		models.Sandbox	true	"Shell command"

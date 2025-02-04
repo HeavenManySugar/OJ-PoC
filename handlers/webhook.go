@@ -35,7 +35,7 @@ type WebhookPayload struct {
 // PostGiteaHook is a function to receive Gitea hook
 //	@Summary		Receive Gitea hook
 //	@Description	Receive Gitea hook
-//	@Tags			Gitea
+//	@Tags			WebHook
 //	@Accept			json
 //	@Produce		json
 //	@Param			hook	body		WebhookPayload	true	"Gitea Hook"

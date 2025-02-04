@@ -567,7 +567,7 @@ paths:
             $ref: '#/definitions/handlers.ResponseHTTP'
       summary: Receive Gitea hook
       tags:
-      - Gitea
+      - WebHook
   /api/sandbox:
     post:
       consumes:
@@ -598,7 +598,7 @@ paths:
             $ref: '#/definitions/handlers.ResponseHTTP'
       summary: Specify the shell command for the corresponding repo
       tags:
-      - sandbox
+      - Sandbox
   /api/score/{repo}:
     get:
       consumes:
