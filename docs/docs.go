@@ -989,6 +989,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "git_repo",
+                "message",
                 "score"
             ],
             "properties": {
@@ -1004,6 +1005,10 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Scored successfully"
                 },
                 "score": {
                     "type": "number",

@@ -402,6 +402,9 @@ definitions:
         type: string
       id:
         type: integer
+      message:
+        example: Scored successfully
+        type: string
       score:
         example: 100
         type: number
@@ -409,6 +412,7 @@ definitions:
         type: string
     required:
     - git_repo
+    - message
     - score
     type: object
 info:

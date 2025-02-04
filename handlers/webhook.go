@@ -122,11 +122,24 @@ func PostGiteaHook(c *fiber.Ctx) error {
 			Message: "Failed to convert score to int",
 		})
 	}
+	
+	// read message from file
+	message, err := os.ReadFile(fmt.Sprintf("%s/%s/message.txt", RepoFolder, payload.Repository.FullName))
+	if err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: "Failed to read message",
+		})
+	}
+	log.Printf("Message: %s", message)
+
 	// Create a new score entry in the database
 	newScore := models.Score{
 		GitRepo: payload.Repository.FullName,
 		Score:   scoreFloat,
+		Message: strings.TrimSpace(string(message)),
 	}
+	
 	if err := db.Create(&newScore).Error; err != nil {
 		log.Printf("Failed to create new score entry: %v", err)
 		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
