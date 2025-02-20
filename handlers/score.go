@@ -6,6 +6,7 @@ import (
 	"net/url"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"github.com/HeavenManySugar/OJ-PoC/database"
 	"github.com/HeavenManySugar/OJ-PoC/models"
@@ -63,23 +64,23 @@ func GetScoreByRepo(c *fiber.Ctx) error {
 	repo, err := url.PathUnescape(c.Params("repo"))
 	if err != nil {
 		log.Printf("Failed to unescape repo name: %v", err)
-		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+		return c.Status(http.StatusBadRequest).JSON(ResponseHTTP{
 			Success: false,
 			Message: "Failed to unescape repo name",
 		})
 	}
 	var score models.Score
 	if err := db.Where("git_repo = ?", repo).Order("updated_at DESC").First(&score).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
+				Success: false,
+				Message: "Score not found",
+			})
+		}
 		log.Printf("Failed to get score by repo: %v", err)
 		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
 			Success: false,
 			Message: "Failed to get score by repo",
-		})
-	}
-	if score.ID == 0 {
-		return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
-			Success: false,
-			Message: "Score not found",
 		})
 	}
 	return c.JSON(ResponseHTTP{
