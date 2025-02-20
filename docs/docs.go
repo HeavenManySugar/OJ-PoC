@@ -347,7 +347,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "type": {
+                                        "data": {
                                             "$ref": "#/definitions/models.Score"
                                         }
                                     }
@@ -394,7 +394,7 @@ const docTemplate = `{
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "type": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/models.Score"

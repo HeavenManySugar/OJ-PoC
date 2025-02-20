@@ -623,7 +623,7 @@ paths:
             allOf:
             - $ref: '#/definitions/handlers.ResponseHTTP'
             - properties:
-                type:
+                data:
                   $ref: '#/definitions/models.Score'
               type: object
         "404":
@@ -651,7 +651,7 @@ paths:
             allOf:
             - $ref: '#/definitions/handlers.ResponseHTTP'
             - properties:
-                type:
+                data:
                   items:
                     $ref: '#/definitions/models.Score'
                   type: array

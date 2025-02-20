@@ -18,7 +18,7 @@ import (
 //	@Tags			Score
 //	@Accept			json
 //	@Produce		json
-//	@Success		200		{object}	ResponseHTTP{type=[]models.Score}
+//	@Success		200		{object}	ResponseHTTP{data=[]models.Score}
 //	@Failure		503		{object}	ResponseHTTP{}
 //	@Router			/api/scores [get]
 func GetScores(c *fiber.Ctx) error {
@@ -55,7 +55,7 @@ func GetScores(c *fiber.Ctx) error {
 //	@Accept			json
 //	@Produce		json
 //	@Param			repo	query		string	true	"Repo name"
-//	@Success		200		{object}	ResponseHTTP{type=models.Score}
+//	@Success		200		{object}	ResponseHTTP{data=models.Score}
 //	@Failure		404		{object}	ResponseHTTP{}
 //	@Failure		503		{object}	ResponseHTTP{}
 //	@Router			/api/score [get]

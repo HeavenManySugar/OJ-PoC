@@ -340,7 +340,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "type": {
+                                        "data": {
                                             "$ref": "#/definitions/models.Score"
                                         }
                                     }
@@ -387,7 +387,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "type": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/models.Score"
