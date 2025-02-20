@@ -31,7 +31,7 @@ func New() *fiber.App {
 	api.Post("/gitea", handlers.PostGiteaHook)
 	api.Post("/sandbox", handlers.PostSandboxCmd)
 	api.Get("/scores", handlers.GetScores)
-	api.Get("/score/:repo", handlers.GetScoreByRepo)
+	api.Get("/score", handlers.GetScoreByRepo)
 
 	return app
 }

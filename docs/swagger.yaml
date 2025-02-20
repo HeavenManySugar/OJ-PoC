@@ -603,14 +603,14 @@ paths:
       summary: Specify the shell command for the corresponding repo
       tags:
       - Sandbox
-  /api/score/{repo}:
+  /api/score:
     get:
       consumes:
       - application/json
       description: Get a score by repo
       parameters:
       - description: Repo name
-        in: path
+        in: query
         name: repo
         required: true
         type: string

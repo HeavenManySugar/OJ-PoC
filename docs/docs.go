@@ -314,7 +314,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/score/{repo}": {
+        "/api/score": {
             "get": {
                 "description": "Get a score by repo",
                 "consumes": [
@@ -332,7 +332,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Repo name",
                         "name": "repo",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],

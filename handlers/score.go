@@ -17,7 +17,7 @@ import (
 //	@Description	Get all scores
 //	@Tags			Score
 //	@Accept			json
-//	@Produce			json
+//	@Produce		json
 //	@Success		200		{object}	ResponseHTTP{type=[]models.Score}
 //	@Failure		503		{object}	ResponseHTTP{}
 //	@Router			/api/scores [get]
@@ -53,15 +53,15 @@ func GetScores(c *fiber.Ctx) error {
 //	@Description	Get a score by repo
 //	@Tags			Score
 //	@Accept			json
-//	@Produce			json
-//	@Param			repo	path	string	true	"Repo name"
+//	@Produce		json
+//	@Param			repo	query		string	true	"Repo name"
 //	@Success		200		{object}	ResponseHTTP{type=models.Score}
 //	@Failure		404		{object}	ResponseHTTP{}
 //	@Failure		503		{object}	ResponseHTTP{}
-//	@Router			/api/score/{repo} [get]
+//	@Router			/api/score [get]
 func GetScoreByRepo(c *fiber.Ctx) error {
 	db := database.DBConn
-	repo, err := url.PathUnescape(c.Params("repo"))
+	repo, err := url.QueryUnescape(c.Query("repo"))
 	if err != nil {
 		log.Printf("Failed to unescape repo name: %v", err)
 		return c.Status(http.StatusBadRequest).JSON(ResponseHTTP{
