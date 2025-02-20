@@ -1,51 +1,12 @@
-// package database
-
-// import (
-// 	"fmt"
-// 	"strconv"
-// 	"time"
-
-// 	"github.com/HeavenManySugar/OJ-PoC/config"
-// 	"gorm.io/driver/postgres"
-// 	"gorm.io/gorm"
-// )
-
-// // DBConn is a pointer to gorm.DB
-// var DBConn *gorm.DB
-
-// // Connect creates a connection to database
-// func Connect() (err error) {
-//     p := config.Config("DB_PORT")
-//     port, err := strconv.ParseUint(p, 10, 32)
-//     if err != nil {
-// 		return err
-// 	}
-
-//     // Connection URL to connect to Postgres Database
-//     dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Config("DB_HOST"), port, config.Config("DB_USER"), config.Config("DB_PASSWORD"), config.Config("DB_NAME"))
-//     // Connect to the DB and initialize the DB variable
-//     DBConn, err = gorm.Open(postgres.Open(dsn))
-// 	if err != nil {
-// 		return err
-// 	}
-
-//     sqlDB, err := DBConn.DB()
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	sqlDB.SetMaxIdleConns(10)
-// 	sqlDB.SetMaxOpenConns(50)
-// 	sqlDB.SetConnMaxLifetime(time.Hour)
-
-//		return nil
-//	}
 package database
 
 import (
+	"fmt"
+	"strconv"
 	"time"
 
-	"gorm.io/driver/sqlite"
+	"github.com/HeavenManySugar/OJ-PoC/config"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -54,12 +15,19 @@ var DBConn *gorm.DB
 
 // Connect creates a connection to database
 func Connect() (err error) {
-    // Connect to the DB and initialize the DB variable
-    DBConn, err = gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
-	if err != nil {
+    p := config.Config("DB_PORT")
+    port, err := strconv.ParseUint(p, 10, 32)
+    if err != nil {
 		return err
 	}
 
+    // Connection URL to connect to Postgres Database
+    dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", config.Config("DB_HOST"), port, config.Config("DB_USER"), config.Config("DB_PASSWORD"), config.Config("DB_NAME"))
+    // Connect to the DB and initialize the DB variable
+    DBConn, err = gorm.Open(postgres.Open(dsn))
+	if err != nil {
+		return err
+	}
 
     sqlDB, err := DBConn.DB()
 	if err != nil {
@@ -70,5 +38,5 @@ func Connect() (err error) {
 	sqlDB.SetMaxOpenConns(50)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
-	return nil
-}
+		return nil
+	}
